@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Animation</title>
+    <style>
+        /* Existing Styles */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling during animation */
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            animation: fadeInLogo 5s ease-out forwards;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            font-size: 48px;
+            font-weight: bold;
+            color: #007bff;
+            animation: animateTitle 5s ease-in-out forwards; /* Apply the animation */
+        }
+
+        .icon-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .price-tag, .magnifier, .cart, .bell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            animation-duration: 1.5s;
+            animation-iteration-count: infinite;
+        }
+
+        .price-tag {
+            background-color: #ff6600;
+            clip-path: polygon(0% 20%, 80% 20%, 100% 50%, 80% 80%, 0% 80%);
+            animation-name: bounce;
+        }
+
+        .graph {
+            width: 30px;
+            height: 30px;
+            border-left: 4px solid white;
+            border-bottom: 4px solid white;
+            transform: rotate(-45deg);
+        }
+
+        .magnifier {
+            background-color: #28a745;
+            border-radius: 50%;
+            animation-name: zoom;
+        }
+
+        .magnifier::before {
+            content: '\1F50D';
+            font-size: 30px;
+            color: white;
+        }
+
+        .cart {
+            background-color: #ffc107;
+            border-radius: 10px;
+            animation-name: shake;
+        }
+
+        .cart::before {
+            content: '\1F6D2';
+            font-size: 30px;
+            color: white;
+        }
+
+        .bell {
+            background-color: #dc3545;
+            border-radius: 50%;
+            animation-name: ring;
+        }
+
+        .bell::before {
+            content: '\1F514';
+            font-size: 30px;
+            color: white;
+        }
+
+        /* Keyframes */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes zoom {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        @keyframes ring {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+        }
+        @keyframes moveIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes bounceLetter {
+    0% {
+        transform: translateY(0);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translateY(100px);  /* Make the letters move downward */
+        opacity: 2;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 0.5;
+    }
+}
+
+
+        @keyframes animateTitle {
+            0% {
+                transform: scale(1);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInLogo {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .alert-text {
+            display: flex;
+            gap: 10px;
+            font-size: 30px;
+            font-weight: bold;
+            animation: moveIn 3s ease-out forwards;
+            z-index: 1;
+            position: relative;
+            opacity: 0;
+        }
+
+        .alert-text span {
+            color: #007bff;
+            animation: bounceLetter 10s ease-in-out infinite;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        .alert-text span:nth-child(odd) {
+            animation-delay: 0.2s;
+        }
+
+        .alert-text span:nth-child(even) {
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="logo">
+            <div class="icon-container">
+                <div class="price-tag"><div class="graph"></div></div>
+                <div class="magnifier"></div>
+                <div class="cart"></div>
+                <div class="bell"></div>
+            </div>
+            SAY
+        </div>
+        <div class="alert-text">
+            <span>S</span>
+            <span>A</span>
+            <span>L</span>
+            <span>E</span>
+            <span> </span>
+            <span>A</span>
+            <span>L</span>
+            <span>E</span>
+            <span>R</span>
+            <span>T</span>
+            <span> </span>
+            <span>Y</span>
+            <span>O</span>
+            <span>U</span>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            document.querySelector('.logo-container').style.display = 'none';
+            window.location.href = 'home1.html'; 
+        }, 5000);
+    </script>
+</body>
+</html>

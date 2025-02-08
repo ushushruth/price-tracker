@@ -14,13 +14,15 @@ body {
     height: 100vh;
     margin: 0;
     background-position: -150px 0 ;
-    background-color: #ffffff;
+    background-color: #fcfcff
+
+;
    
 }
 .container {
-    background: white;
+    background: #fcfcff;
     padding: 25px;
-    border-radius: 12px;
+    border-radius: 18px;
     box-shadow: 0 8px 16px rgba(1, 1, 1, 0.2);
     width: 350px;
     text-align: center;
@@ -43,8 +45,8 @@ label {
 }
 input {
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    border: 1px solid #000000;
+    border-radius: 15px;
     font-size: 14px;
     outline: none;
     transition: all 0.3s ease;
@@ -54,21 +56,55 @@ input:focus {
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
 }
 button {
-    background: #4CAF50;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    margin-top: 10px;
-    transition: all 0.3s ease;
-}
-button:hover {
-    background: #044aac;
-    box-shadow: 0 4px 10px rgba(46, 139, 87, 0.3);
-}
+            background: linear-gradient(to right, #0b04e0, #0b04e0);
+            color: white;
+            padding: 5px 5px;
+            padding-left: 22px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 180px;
+            align-self: center;
+            
+        }
+
+        button::after {
+            content: "→"; 
+            font-size: 25px;
+            font-weight:600;
+            opacity: 0;
+            transition: all 0.3s ease;
+            transform: translateX(-10px);
+        }
+
+        button:hover {
+            background: linear-gradient(to right, #039728, #039728);
+            box-shadow: 0 4px 10px rgba(2, 96, 30, 0.3);
+        }
+
+        button:hover span {
+            transform: translateX(-8px);
+        }
+
+        button:hover::after {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        span {
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -84,8 +120,8 @@ button:hover {
             top: 0;
             width: 100%;
         
-            background-color:  #333;
-            color: white;
+            background-color:  #fcfcff;
+            color:  #fcfcff;            ;
         
             padding:5px;
             font-size: 15px;
@@ -159,13 +195,16 @@ button:hover {
             <label for="url">Product URL:</label>
             <input type="url" id="url" placeholder="Enter product link" required>
 
-            <label for="price">Current Price:</label>
+            <label for="price">Alert Price:</label>
             <input type="number" id="price" placeholder="Enter price" required>
 
             <label for="email">Your Email:</label>
             <input type="email" id="email" placeholder="Enter your email" required>
 
-            <button type="submit">Start Tracking</button>
+            <button type="submit"><span>
+
+            Start Tracking
+        </span></button>
         </form>
     </div>
 

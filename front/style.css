@@ -62,7 +62,7 @@ body {
 
 
 header {
-    background-color: #333;
+    background-color: #e9e9f0;
     color: #fff;
     padding: 1rem 0;
     animation: fadeIn 1s ease-in-out;
@@ -91,7 +91,7 @@ nav .nav-links li {
 }
 
 nav .nav-links a {
-    color: #fff;
+    color: #412828;
     text-decoration: none;
     font-size: 1.1rem;
     transition: color 0.3s ease;

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Animation</title>
+    <style>
+        /* Body Styling */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling during animation */
+        }
+
+        /* Logo Container */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        /* Image Styling */
+        .logo-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%; /* Ensures the image is always round */
+            object-fit: cover; /* Prevents distortion */
+            animation: animateTitle 2.5s ease-in-out forwards;
+        }
+
+        /* Animation */
+        @keyframes animateTitle {
+            0% {
+                transform: scale(1);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <img src="https://i.postimg.cc/m2gW2M96/Whats-App-Image-2025-02-08-at-19-20-05-986fc138.jpg" class="logo-img" alt="Bell">
+    </div>
+
+    <script>
+        setTimeout(function() {
+            document.querySelector('.logo-container').style.display = 'none';
+            window.location.href = 'home1.html'; 
+        }, 2500); // Redirect after 2.5 seconds
+    </script>
+</body>
+</html>

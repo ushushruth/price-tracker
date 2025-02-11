@@ -2,7 +2,7 @@
         <html lang="en">
         <head>
             <title>Price Tracker - Homepage</title>
-           <link rel="stylesheet" href="style.css">   
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">   
            <style>
             <!DOCTYPE html>
        <html lang="en">
@@ -148,7 +148,7 @@
             <script>
                 document.getElementById('startTracking').addEventListener('click', function (e) {
                     e.preventDefault();
-                    window.location.href = 'track.html';
+                    window.location.href = '/track-page';
                 });
                 document.getElementById('productDetails').addEventListener('click', function (e) {
                     e.preventDefault();

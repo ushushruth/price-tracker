@@ -1,3 +1,4 @@
+
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 import requests
 from bs4 import BeautifulSoup
@@ -53,7 +54,7 @@ def scrape_bestbuy(url):
 # Function to send email
 def send_email(receiver_email, subject, message):
     sender_email = "ushushruth@gmail.com"
-    app_password = "sdkaztjyrkftbggp"  # Store securely
+    app_password = "irhdjyowmrofsbag"  # Store securely
     text = f"Subject: {subject}\n\n{message}"
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
@@ -73,11 +74,11 @@ def home():
 def track_page():
     return render_template("track.html")
 
-@app.route("/track", methods=["POST"])
+@app.route("/track-page", methods=["POST"])
 def track_price():
     data = request.json
     url = data.get("url")
-    target_price = float(data.get("target_price"))
+    target_price = float(data.get("price"))
     receiver_email = data.get("email")
 
     if not url or not target_price or not receiver_email:
@@ -92,12 +93,15 @@ def track_price():
         price = scrape_bestbuy(url)
     else:
         return jsonify({"error": "Unsupported website"}), 400
+    
+
 
     if price:
         if price <= target_price:
             email_sent = send_email(receiver_email, "Price Drop Alert!", f"The price of your product has dropped to {price}. Buy now: {url}")
             return jsonify({"message": "Price dropped! Email sent.", "price": price, "email_sent": email_sent})
         return jsonify({"message": "Price is still above target.", "price": price})
+        
     
     return jsonify({"error": "Could not retrieve the price"}), 500
 

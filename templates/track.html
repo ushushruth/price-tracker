@@ -54,6 +54,10 @@
     background: #026a1c;
     box-shadow: 0 4px 10px rgba(2, 96, 30, 0.3);
 }
+.modal button:active {
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transform: translateY(2px);
+}
 
 
 body {
@@ -149,7 +153,11 @@ button {
             opacity: 1;
             transform: translateX(0);
         }
-
+        button:active {
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2);
+            transform: translateY(2px);
+        }
+        
         span {
             display: inline-block;
             transition: all 0.3s ease;
@@ -292,9 +300,9 @@ button {
     e.preventDefault(); // Prevent the default form submission behavior
 
     // Get the input values
-    const productUrl = document.getElementById('url').value;
-    const alertPrice = document.getElementById('price').value;
-    const email = document.getElementById('email').value;
+    var productUrl = document.getElementById('url').value;
+    var alertPrice = document.getElementById('price').value;
+    var email = document.getElementById('email').value;
 
     // Validate inputs (optional, but recommended)
     if (!productUrl || !alertPrice || !email) {

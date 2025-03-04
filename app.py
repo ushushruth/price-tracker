@@ -144,7 +144,7 @@ def send_email(receiver_email, subject, message):
         return True
     except Exception:
         return False
-
+    
 @app.route("/")
 def home():
     return render_template("home1.html")
@@ -152,6 +152,9 @@ def home():
 @app.route("/track-page")
 def track_page():
     return render_template("track.html")
+@app.route("/p-details")
+def p_details():
+    return render_template("pdetails.html")
 
 @app.route("/track-page", methods=["POST"])
 def track_price():

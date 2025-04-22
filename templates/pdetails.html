@@ -129,9 +129,32 @@
       left: 30px;
       z-index: -1;
   }
+
+  #loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+}
+#loadingOverlay img {
+    width: 145px;
+    height: 145px;
+}
+
+
     </style>
 </head>
-<body>
+     <div id="loadingOverlay"  style="display: none;">
+        <img src="https://i.postimg.cc/8Ck4wtsj/Animation-1745353486582.gif" alt="Loading...">
+    </div>
+    
+
       <div class="container1">
         <div class="icon">
             <img src="https://i.postimg.cc/m2gW2M96/Whats-App-Image-2025-02-08-at-19-20-05-986fc138.jpg" alt="Bell">
@@ -153,43 +176,59 @@
         </table>
     </div>
     <script>
-        async function fetchProductDetails() {
-            let url = document.getElementById("productURL").value;
-            if (url.trim() === "") {
-                alert("Please enter a valid URL.");
-                return;
-            }
-        
-            const response = await fetch("/p-details", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ productURL: url })
-            });
-        
-            const data = await response.json();
-        
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-        
-            document.getElementById("productName").innerText = data.name || "-";
-            document.getElementById("productPrice").innerText = data.price ? `₹${data.price}` : "-";
-            document.getElementById("productAvailability").innerText = data.details ? data.details.join(", ") : "-";
-            document.getElementById("productRating").innerText = data.rating || "-";
-        
-            let productImage = document.getElementById("productImage");
-            if (data.image_url) {
-                productImage.src = data.image_url;
-                productImage.style.display = "block";
-            } else {
-                productImage.style.display = "none";
-            }
-        
-            document.getElementById("productTable").style.display = "table";
+async function fetchProductDetails() {
+    let url = document.getElementById("productURL").value;
+    if (url.trim() === "") {
+        alert("Please enter a valid URL.");
+        return;
+    }
+
+    // Show loading overlay
+    const overlay = document.getElementById("loadingOverlay");
+    overlay.style.display = "flex";
+
+    // Hide previous data
+    document.getElementById("productImage").style.display = "none";
+    document.getElementById("productTable").style.display = "none";
+
+    try {
+        const response = await fetch("/p-details", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ productURL: url })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            alert(data.error);
+            return;
         }
+
+        document.getElementById("productName").innerText = data.name || "-";
+        document.getElementById("productPrice").innerText = data.price ? `₹${data.price}` : "-";
+        document.getElementById("productAvailability").innerText = data.details ? data.details.join(", ") : "-";
+        document.getElementById("productRating").innerText = data.rating || "-";
+
+        let productImage = document.getElementById("productImage");
+        if (data.image_url) {
+            productImage.src = data.image_url;
+            productImage.style.display = "block";
+        }
+
+        document.getElementById("productTable").style.display = "table";
+    } catch (err) {
+        alert("Something went wrong. Please try again.");
+        console.error(err);
+    } finally {
+        // Hide loading overlay
+        overlay.style.display = "none";
+    }
+}
+
+
         </script>
             
     

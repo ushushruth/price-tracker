@@ -21,6 +21,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from requests_html import HTMLSession
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import smtplib
 import time
 import sqlite3
@@ -78,7 +80,7 @@ def scrape_myntra(url):
     chrome_options = get_chrome_options()
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    product_data = { "name": None, "price": None, "rating": None, "details": None }
+    product_data = { "name": None, "price": None, "rating": None, "details": None, "image_url": None }
     wait = WebDriverWait(driver, 30)
 
     try:
@@ -264,58 +266,54 @@ def scrape_amazon(url):
         "Accept-Encoding": "gzip, deflate, br",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
         "Connection": "keep-alive",
-        "DNT": "1", # Do Not Track Request Header
+        "DNT": "1",
         "Upgrade-Insecure-Requests": "1"
     }
-    product_data = { "name": None, "price": None, "rating": None, "details": None }
+
+    product_data = { "name": None, "price": None, "rating": None, "details": None, "image_url": None }
 
     try:
         response = requests.get(url, headers=headers, timeout=15)
-        response.raise_for_status() # Raise an exception for bad status codes
+        response.raise_for_status()
         soup = BeautifulSoup(response.content, "html.parser")
 
-        # Scrape Name
+        # Name
         name_element = soup.select_one("#productTitle")
         if name_element:
             product_data["name"] = name_element.text.strip()
-        else:
-             print("Amazon Scraper: Name not found.")
 
-        # Scrape Price
-        # Try different selectors as Amazon varies its structure
+        # Price
         price_element = soup.select_one("span.a-price-whole")
         if not price_element:
-             price_element = soup.select_one("span.a-price .a-offscreen") # Another common pattern
+            price_element = soup.select_one("span.a-price .a-offscreen")
         if price_element:
             price_text = price_element.text.replace('₹', '').replace(',', '').strip()
             price_match = re.search(r'\d+\.?\d*', price_text)
             if price_match:
                 product_data["price"] = float(price_match.group())
-        else:
-            print("Amazon Scraper: Price not found.")
 
-
-        # Scrape Rating
-        rating_element = soup.select_one("span[data-hook='rating-out-of-text']") # Preferred selector
+        # Rating
+        rating_element = soup.select_one("span[data-hook='rating-out-of-text']")
         if not rating_element:
-             rating_element = soup.select_one("i.a-icon-star span.a-icon-alt") # Alternative
+            rating_element = soup.select_one("i.a-icon-star span.a-icon-alt")
         if rating_element:
             rating_text = rating_element.text.strip()
-            # Extract the number (e.g., "4.5 out of 5 stars" -> 4.5)
             rating_match = re.search(r'\d+\.?\d*', rating_text)
             if rating_match:
                 product_data["rating"] = float(rating_match.group())
         else:
-            print("Amazon Scraper: Rating not found.")
             product_data["rating"] = "Not Available"
 
-        # Scrape Details
+        # Details
         details_list = soup.select("#feature-bullets ul.a-unordered-list li span.a-list-item")
-        if details_list:
-            product_data["details"] = [item.text.strip() for item in details_list if item.text.strip()]
+        product_data["details"] = [item.text.strip() for item in details_list if item.text.strip()]
+
+        # ✅ Image
+        img_tag = soup.find("img", {"id": "landingImage"})
+        if img_tag:
+            product_data["image_url"] = img_tag.get("src")
         else:
-            print("Amazon Scraper: Details not found.")
-            product_data["details"] = []
+            product_data["image_url"] = "Not Available"
 
         return product_data
 
@@ -325,6 +323,7 @@ def scrape_amazon(url):
     except Exception as e:
         print(f"Amazon Scraper Error: An unexpected error occurred: {e}")
         return None
+
     
 
     
@@ -333,7 +332,7 @@ def scrape_ajio(url):
     chrome_options = get_chrome_options()
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    product_data = { "name": None, "price": None, "rating": None, "details": None }
+    product_data = { "name": None, "price": None, "rating": None, "details": None, "image_url": None }
 
     try:
         driver.get(url)
@@ -398,7 +397,7 @@ def scrape_flipkart(url):
     chrome_options = get_chrome_options()
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    product_data = { "name": None, "price": None, "rating": None, "details": None }
+    product_data = { "name": None, "price": None, "rating": None, "details": None, "image_url": None }
 
     try:
         driver.get(url)
@@ -465,6 +464,15 @@ def scrape_flipkart(url):
                   product_data["details"] = []
 
 
+        #image scraping
+        try:
+            image_elem = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "img.DByuf4.IZexXJ.jLEJ7H")))
+            product_data["image_url"] = image_elem.get_attribute("src")
+        except:
+            print("Flipkart Scraper: Image URL not found.")
+            product_data["image_url"] = "Not Available"
+
+
         return product_data
 
     except Exception as e:
@@ -480,7 +488,7 @@ def scrape_meesho(url):
     chrome_options = get_chrome_options()
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    product_data = { "name": None, "price": None, "rating": None, "details": None }
+    product_data = { "name": None, "price": None, "rating": None, "details": None, "image_url": None }
     wait = WebDriverWait(driver, 30)
 
     try:
@@ -665,19 +673,33 @@ def scrape_meesho(url):
 
 
 # Function to send email
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import smtplib
+
 def send_email(receiver_email, subject, message):
     sender_email = "sayutracker@gmail.com"
-    app_password = "wttlebjkwwelabyl"  # Store securely
-    text = f"Subject: {subject}\n\n{message}"
+    app_password = "rzmjlmldyyntsqiy"  # Keep secure
+
     try:
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = receiver_email
+        msg['Subject'] = subject
+
+        # Attach plain text part with UTF-8 encoding
+        msg.attach(MIMEText(message, 'plain', 'utf-8'))
+
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
         server.login(sender_email, app_password)
-        server.sendmail(sender_email, receiver_email, text)
+        server.send_message(msg)
         server.quit()
         return True
-    except Exception:
+    except Exception as e:
+        print("Email sending failed:", e)
         return False
+
     
 @app.route("/")
 def home():
@@ -768,7 +790,7 @@ def track_price():
             print("Database Insert Error:", str(e))
 
         if price <= target_price:
-            email_sent = send_email(receiver_email, "Price Drop Alert!", f"The price of your product has dropped to {price}. Buy now: {url}")
+            email_sent = send_email(receiver_email, "Price Drop Alert! 🎉", f"Hey there!  Good news from SAYU — the price of the product you're watching has dropped to ₹{price}. 🎯Hurry up and grab the deal before it's gone!. Buy now: {url}")
             return jsonify({"message": "Price dropped! Email sent.", "price": price, "email_sent": email_sent})
         
         return jsonify({"message": "Price is still above target.", "price": price})

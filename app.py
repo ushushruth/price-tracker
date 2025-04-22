@@ -704,6 +704,8 @@ def get_product_details():
         product_data = scrape_meesho(url1)
     elif "ajio" in url1:
         product_data = scrape_ajio(url1)
+    elif "myntra" in url1:
+        product_data=scrape_myntra(url1)
 
     if product_data:
         return jsonify(product_data)

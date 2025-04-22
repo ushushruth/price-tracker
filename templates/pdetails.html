@@ -140,41 +140,45 @@
         </table>
     </div>
     <script>
-    async function fetchProductDetails() {
-        let url = document.getElementById("productURL").value;
-        if (url.trim() === "") {
-            alert("Please enter a valid URL.");
-            return;
-        }
-    
-        const response = await fetch("/p-details", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ productURL: url })
-        });
-    
-        const data = await response.json();
-    
-        if (data.error) {
-            alert(data.error);
-            return;
-        }
-    
-        document.getElementById("productName").innerText = data.name || "-";
-        document.getElementById("productPrice").innerText = data.price ? `₹${data.price}` : "-";
-        document.getElementById("productAvailability").innerText = data.details ? data.details.join(", ") : "-";
-        document.getElementById("productRating").innerText = data.rating || "-";
-    
-        let productImage = document.getElementById("productImage");
-            ///productImage.src = productData.imageUrl;
-            productImage.style.display = "block";
+        async function fetchProductDetails() {
+            let url = document.getElementById("productURL").value;
+            if (url.trim() === "") {
+                alert("Please enter a valid URL.");
+                return;
+            }
+        
+            const response = await fetch("/p-details", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ productURL: url })
+            });
+        
+            const data = await response.json();
+        
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+        
+            document.getElementById("productName").innerText = data.name || "-";
+            document.getElementById("productPrice").innerText = data.price ? `₹${data.price}` : "-";
+            document.getElementById("productAvailability").innerText = data.details ? data.details.join(", ") : "-";
+            document.getElementById("productRating").innerText = data.rating || "-";
+        
+            let productImage = document.getElementById("productImage");
+            if (data.image_url) {
+                productImage.src = data.image_url;
+                productImage.style.display = "block";
+            } else {
+                productImage.style.display = "none";
+            }
+        
             document.getElementById("productTable").style.display = "table";
-    
-        document.getElementById("productTable").style.display = "table";
-    }
-    </script>
+        }
+        </script>
+        
     
     
 </body>

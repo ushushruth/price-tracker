@@ -10,7 +10,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from requests_html import HTMLSession
 import smtplib
 import time
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
